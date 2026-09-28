@@ -186,10 +186,10 @@ def draw_resources(c):
         ("sangue_atual", "Sangue atual"),
         ("sangue_max", "Sangue max."),
         ("sangue_turno", "Gasto/turno"),
-        ("forca_vontade_perm", "FV permanente"),
-        ("forca_vontade_temp", "FV temporaria"),
+        ("forca_vontade_perm", "Força de Vontade Permanente"),
+        ("forca_vontade_temp", "Força de Vontade Temporária"),
     ]
-    yy = top - 28
+    yy = top - 35
     for name, lab in fields:
         text_labeled(c, name, lab, x1 + 7, yy, 38 * mm, h=12)
         yy -= 18

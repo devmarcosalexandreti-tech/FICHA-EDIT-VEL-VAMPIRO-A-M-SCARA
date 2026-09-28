@@ -3,6 +3,7 @@ from collections import Counter
 from pathlib import Path
 
 from pypdf import PdfReader
+from reportlab.lib.units import mm
 
 from src.vampiro_sheet import data
 
@@ -100,6 +101,18 @@ class ExistingPdfContractTests(unittest.TestCase):
         last_discipline_bottom = float(self.widgets["disciplina_Vicissitude_val"]["/Rect"][1])
         derived_field_top = float(self.widgets["humanidade_sugerida"]["/Rect"][3])
         self.assertGreaterEqual(last_discipline_bottom - derived_field_top, 10)
+
+    def test_blood_and_willpower_labels_have_header_spacing_and_full_names(self):
+        page = self.reader.pages[1]
+        page_text = page.extract_text()
+        self.assertIn("Força de Vontade Permanente", page_text)
+        self.assertIn("Força de Vontade Temporária", page_text)
+        self.assertNotIn("FV permanente", page_text)
+        self.assertNotIn("FV temporaria", page_text)
+
+        header_bottom = float(page.mediabox.height) - 25 * mm - 15
+        current_blood_top = float(self.widgets["sangue_atual"]["/Rect"][3])
+        self.assertGreaterEqual(header_bottom - current_blood_top, 7)
 
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(

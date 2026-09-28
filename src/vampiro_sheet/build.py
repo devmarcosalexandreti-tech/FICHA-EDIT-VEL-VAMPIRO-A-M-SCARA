@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from reportlab.lib import colors
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
@@ -213,16 +214,21 @@ def draw_resources(c):
 
     section(c, "Vitalidade", x2, top, w1, 70 * mm)
     yy = top - 28
+    damage_columns = [
+        ("Cont.", "cont", x2 + 66 * mm),
+        ("Letal", "letal", x2 + 76 * mm),
+        ("Agr.", "agr", x2 + 86 * mm),
+    ]
+    c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 6.5)
-    c.drawString(x2 + 67 * mm, yy + 13, "Cont.")
-    c.drawString(x2 + 82 * mm, yy + 13, "Letal")
-    c.drawString(x2 + 97 * mm, yy + 13, "Agr.")
+    for damage_label, _, column_x in damage_columns:
+        c.drawCentredString(column_x + 4, top - 10.5, damage_label)
+    c.setFillColor(INK)
     for level, penalty in data.HEALTH_LEVELS:
         c.setFont("Helvetica", 7)
         c.drawString(x2 + 7, yy + 1, f"{level} ({penalty})")
-        checkbox(c, f"vitalidade_{_safe(level)}_cont", x2 + 68 * mm, yy - 2, size=8)
-        checkbox(c, f"vitalidade_{_safe(level)}_letal", x2 + 83 * mm, yy - 2, size=8)
-        checkbox(c, f"vitalidade_{_safe(level)}_agr", x2 + 98 * mm, yy - 2, size=8)
+        for _, damage_type, column_x in damage_columns:
+            checkbox(c, f"vitalidade_{_safe(level)}_{damage_type}", column_x, yy - 2, size=8)
         yy -= 13
 
     section(c, "Combate", x1, top - 76 * mm, PAGE_W - 2 * MARGIN, 72 * mm)

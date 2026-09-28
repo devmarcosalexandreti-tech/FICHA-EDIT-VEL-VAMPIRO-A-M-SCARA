@@ -3,6 +3,7 @@ from collections import Counter
 from pathlib import Path
 
 from pypdf import PdfReader
+from pypdf.generic import ContentStream
 from reportlab.lib.units import mm
 
 from src.vampiro_sheet import data
@@ -141,6 +142,42 @@ class ExistingPdfContractTests(unittest.TestCase):
         section_top = float(page.mediabox.height) - 25 * mm
         first_checkbox_top = float(self.widgets["sangue_box_1"]["/Rect"][3])
         self.assertGreaterEqual(section_top - first_checkbox_top, 54)
+
+    def test_health_damage_headers_and_columns_stay_inside_their_section(self):
+        page = self.reader.pages[1]
+        page_width = float(page.mediabox.width)
+        section_width = (page_width - 2 * 12 * mm - 4 * mm) / 2
+        section_left = 12 * mm + section_width + 4 * mm
+        section_right = section_left + section_width
+
+        for level, _ in data.HEALTH_LEVELS:
+            for damage_type in ["cont", "letal", "agr"]:
+                name = f"vitalidade_{safe_name(level)}_{damage_type}"
+                with self.subTest(field=name):
+                    left, _, right, _ = map(float, self.widgets[name]["/Rect"])
+                    self.assertGreaterEqual(left, section_left)
+                    self.assertLessEqual(right, section_right)
+
+        current_color = None
+        current_matrix = None
+        headers = {}
+        stream = ContentStream(page.get_contents(), self.reader)
+        for operands, operator in stream.operations:
+            if operator == b"rg":
+                current_color = tuple(float(value) for value in operands)
+            elif operator == b"Tm":
+                current_matrix = tuple(float(value) for value in operands)
+            elif operator == b"Tj" and str(operands[0]) in {"Cont.", "Letal", "Agr."}:
+                headers[str(operands[0])] = (current_color, current_matrix)
+
+        self.assertEqual({"Cont.", "Letal", "Agr."}, set(headers))
+        section_top = float(page.mediabox.height) - 25 * mm
+        for color, matrix in headers.values():
+            self.assertEqual((1.0, 1.0, 1.0), color)
+            self.assertGreater(matrix[4], section_left)
+            self.assertLess(matrix[4], section_right)
+            self.assertGreater(matrix[5], section_top - 15)
+            self.assertLess(matrix[5], section_top)
 
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(

@@ -53,7 +53,7 @@ Após a instalação, as verificações são executadas com Ruff, unittest, Cove
 - Compilação Python com avisos tratados como erro: aprovada.
 - Testes Python: 26 aprovados.
 - Cobertura Python combinada: 99%, com medição de ramificações.
-- Testes JavaScript: 18 aprovados.
+- Testes JavaScript: 20 aprovados.
 - Geração e validação do PDF: aprovadas.
 - Contrato do PDF: 5 páginas, 485 campos, AcroForm e JavaScript presentes.
 

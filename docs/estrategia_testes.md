@@ -119,7 +119,7 @@ python scripts\validate_sheet.py
 ## Resultado desta fase
 
 - 26 testes Python aprovados;
-- 18 testes JavaScript aprovados;
+- 20 testes JavaScript aprovados;
 - cobertura Python de 99% no relatorio combinado;
 - 95,2% dos ramos Python cobertos;
 - lint e formatacao aprovados;

@@ -15,7 +15,8 @@ O projeto reduz erros de preenchimento manual ao sincronizar pontos, recursos e 
 - Clãs do módulo básico, incluindo Camarilla, Sabá, independentes e Caitiff.
 - Atributos, Habilidades, Disciplinas, Antecedentes, Virtudes, Humanidade, Força de Vontade, Sangue, Vitalidade, equipamento, armas, rituais, história, relações, Qualidades, Defeitos e experiência.
 - Sincronização entre campos numéricos e marcadores visuais.
-- Todos os Atributos iniciam em 1 e não podem ser reduzidos abaixo desse valor.
+- Todos os Atributos iniciam em 1, mas o jogador pode reduzi-los explicitamente para 0.
+- Seletores de identidade começam vazios e só assumem um valor após a escolha do jogador.
 - Exclusividade das marcações de dano e atualização dos recursos.
 - Cálculos e alertas de geração, reserva de sangue, Humanidade, Força de Vontade, pontos de bônus, Defeitos, idiomas e experiência.
 - Validação estrutural automatizada do PDF gerado.

@@ -31,12 +31,6 @@ class FieldActionTests(unittest.TestCase):
         self.assertIn("event.rc = false", script)
         self.assertIn("recalcVampiro", script)
 
-    def test_attribute_numeric_field_requires_minimum_one(self):
-        event, script = field_action("atributo_Fisicos_Forca_val", "/Tx")
-        self.assertEqual("/V", event)
-        self.assertIn("Number(event.value) < 1", script)
-        self.assertIn("event.rc = false", script)
-
     def test_regular_text_field_only_recalculates(self):
         event, script = field_action("nome_personagem", "/Tx")
         self.assertEqual("/V", event)

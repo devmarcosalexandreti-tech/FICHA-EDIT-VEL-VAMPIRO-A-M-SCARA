@@ -146,15 +146,29 @@ test("clicking a trait dot updates the numeric source of truth", () => {
   assert.equal(sheet.values().habilidade_Briga_4, "Off");
 });
 
-test("attributes cannot be reduced below one", () => {
-  const sheet = createSheet(vampireValues({ atributo_Fisicos_Forca_val: "0" }));
-  assert.equal(sheet.values().atributo_Fisicos_Forca_val, "1");
-  assert.equal(sheet.values().atributo_Fisicos_Forca_1, "Yes");
-
+test("player can explicitly reduce an attribute to zero", () => {
+  const sheet = createSheet(vampireValues({ atributo_Fisicos_Forca_val: "1" }));
   sheet.fields.atributo_Fisicos_Forca_1.value = "Off";
   sheet.context.syncDotsFromClick("atributo_Fisicos_Forca", 1, 5);
-  assert.equal(sheet.values().atributo_Fisicos_Forca_val, "1");
-  assert.equal(sheet.values().atributo_Fisicos_Forca_1, "Yes");
+  assert.equal(sheet.values().atributo_Fisicos_Forca_val, "0");
+  assert.equal(sheet.values().atributo_Fisicos_Forca_1, "Off");
+});
+
+test("blank identity choices do not imply character rules", () => {
+  const sheet = createSheet({}).values();
+  assert.equal(sheet.tipo_personagem, "");
+  assert.equal(sheet.humanidade_sugerida, "");
+  assert.equal(sheet.limite_caracteristica, "");
+  assert.equal(sheet.sangue_max, "");
+  assert.match(sheet.avisos_criacao, /Tipo: selecione uma opcao/);
+});
+
+test("blank generation does not imply thirteenth generation", () => {
+  const sheet = createSheet(vampireValues({ geracao: "" })).values();
+  assert.equal(sheet.limite_caracteristica, "");
+  assert.equal(sheet.sangue_max, "");
+  assert.equal(sheet.sangue_turno, "");
+  assert.match(sheet.avisos_criacao, /Geracao: selecione uma opcao/);
 });
 
 test("damage types are mutually exclusive within one health level", () => {

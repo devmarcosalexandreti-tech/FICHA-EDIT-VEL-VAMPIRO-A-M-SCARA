@@ -47,6 +47,10 @@ function vf(name) {
   return field ? field.value : "";
 }
 
+function selectedValue(name) {
+  return String(vf(name)).replace(/^\s+|\s+$/g, "");
+}
+
 function hasValue(name) {
   var value = vf(name);
   return value !== "" && value !== "Off";
@@ -92,8 +96,6 @@ function setDots(baseName, value, count) {
 function syncDotsFromClick(baseName, index, count) {
   var clicked = this.getField(baseName + "_" + index);
   var value = clicked && clicked.value !== "Off" ? Number(index) : Number(index) - 1;
-  var minimum = baseName.indexOf("atributo_") === 0 ? 1 : 0;
-  value = Math.max(minimum, value);
   setv(baseName + "_val", value);
   setDots(baseName, value, count);
   recalcVampiro();
@@ -115,12 +117,7 @@ function syncHealthDamage(baseName, damageType) {
 
 function syncAllTraitDots(warnings) {
   for (var index = 0; index < traitBases.length; index += 1) {
-    var minimum = traitBases[index].indexOf("atributo_") === 0 ? 1 : 0;
-    var value = numericField(traitBases[index] + "_val", warnings, minimum, 10);
-    if (value !== null && value < minimum) {
-      value = minimum;
-      setv(traitBases[index] + "_val", value);
-    }
+    var value = numericField(traitBases[index] + "_val", warnings, 0, 10);
     if (value !== null) setDots(traitBases[index], Math.min(value, 5), 5);
   }
 }
@@ -140,7 +137,7 @@ function genStats(generation) {
     "13+": ["5", "10", "1"],
     "14": ["5", "10/8 util", "1"]
   };
-  return table[generation] || table["13+"];
+  return table[generation] || null;
 }
 
 function validateDistribution(names, expected, label, warnings) {
@@ -195,17 +192,21 @@ function validateCreation(warnings, isPlayerVampire) {
     }
   }
 
-  if (vf("cla") === "Nosferatu" && hasValue("atributo_Sociais_Aparencia_val")) {
+  if (selectedValue("cla") === "Nosferatu" && hasValue("atributo_Sociais_Aparencia_val")) {
     var appearance = numericField("atributo_Sociais_Aparencia_val", warnings, 0, 10);
     if (appearance !== null && appearance !== 0) {
       warnings.push("Nosferatu: Aparencia deve ser 0");
     }
   }
 
-  if (isPlayerVampire && hasValue("antecedente_Geracao_val") && vf("geracao") !== "14") {
+  if (
+    isPlayerVampire &&
+    hasValue("antecedente_Geracao_val") &&
+    selectedValue("geracao") !== "14"
+  ) {
     var background = numericField("antecedente_Geracao_val", warnings, 0, 5);
     var expectedGenerations = ["13+", "12", "11", "10", "9", "8"];
-    if (background !== null && vf("geracao") !== expectedGenerations[background]) {
+    if (background !== null && selectedValue("geracao") !== expectedGenerations[background]) {
       warnings.push("Geracao nao corresponde ao Antecedente Geracao");
     }
   }
@@ -235,13 +236,21 @@ function calculateFlaws(warnings) {
 
 function recalcVampiro() {
   var warnings = [];
-  var characterType = vf("tipo_personagem");
+  var characterType = selectedValue("tipo_personagem");
   var isPlayerVampire = characterType === "Vampiro jogador";
 
   syncAllTraitDots(warnings);
 
-  if (isPlayerVampire) {
-    if (vf("moralidade_tipo") === "Humanidade") {
+  if (characterType === "") {
+    setv("humanidade_sugerida", "");
+    setv("forca_vontade_sugerida", "");
+    setv("limite_caracteristica", "");
+    setv("sangue_max", "");
+    setv("sangue_turno", "");
+    warnings.push("Tipo: selecione uma opcao");
+  } else if (isPlayerVampire) {
+    var morality = selectedValue("moralidade_tipo");
+    if (morality === "Humanidade") {
       var conscience = numberOrZero(
         "virtude_ConscienciaConviccao_val", warnings, 0, 5
       );
@@ -249,18 +258,28 @@ function recalcVampiro() {
         "virtude_AutocontroleInstinto_val", warnings, 0, 5
       );
       setv("humanidade_sugerida", conscience + selfControl);
-    } else {
+    } else if (morality === "Trilha") {
       setv("humanidade_sugerida", "manual");
+    } else {
+      setv("humanidade_sugerida", "");
+      warnings.push("Moralidade: selecione uma opcao");
     }
     setv(
       "forca_vontade_sugerida",
       numberOrZero("virtude_Coragem_val", warnings, 0, 5)
     );
 
-    var stats = genStats(vf("geracao"));
-    setv("limite_caracteristica", stats[0]);
-    setv("sangue_max", stats[1]);
-    setv("sangue_turno", stats[2]);
+    var stats = genStats(selectedValue("geracao"));
+    if (stats) {
+      setv("limite_caracteristica", stats[0]);
+      setv("sangue_max", stats[1]);
+      setv("sangue_turno", stats[2]);
+    } else {
+      setv("limite_caracteristica", "");
+      setv("sangue_max", "");
+      setv("sangue_turno", "");
+      warnings.push("Geracao: selecione uma opcao");
+    }
   } else {
     if (previousCharacterType === "Vampiro jogador") {
       setv("sangue_max", "");
@@ -295,7 +314,7 @@ function recalcVampiro() {
   setv("idiomas_sugeridos", languages[Math.max(0, Math.min(5, linguistics))]);
 
   validateCreation(warnings, isPlayerVampire);
-  if (!isPlayerVampire) {
+  if (characterType !== "" && !isPlayerVampire) {
     warnings.push("Recursos deste tipo de personagem sao preenchidos manualmente");
   }
   setv("avisos_criacao", warnings.length ? warnings.join(" | ") : "OK");

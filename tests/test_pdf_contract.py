@@ -92,17 +92,29 @@ class ExistingPdfContractTests(unittest.TestCase):
 
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
-            data.CHARACTER_TYPES,
+            [" ", *data.CHARACTER_TYPES],
             [str(option) for option in self.fields["tipo_personagem"]["/Opt"]],
         )
         self.assertEqual(
-            data.CLANS,
+            [" ", *data.CLANS],
             [str(option) for option in self.fields["cla"]["/Opt"]],
         )
         self.assertEqual(
-            data.GENERATION_OPTIONS,
+            [" ", *data.GENERATION_OPTIONS],
             [str(option) for option in self.fields["geracao"]["/Opt"]],
         )
+
+    def test_identity_dropdowns_start_blank(self):
+        for name in [
+            "tipo_personagem",
+            "cla",
+            "geracao",
+            "natureza",
+            "comportamento",
+            "moralidade_tipo",
+        ]:
+            with self.subTest(field=name):
+                self.assertEqual("", str(self.fields[name].get("/V", "")).strip())
 
     def test_multiline_fields_allow_long_form_content(self):
         for name in [

@@ -66,25 +66,43 @@ def draw_identity(c):
         x1,
         top - 14,
         col_w,
-        value="Vampiro jogador",
+        allow_blank=True,
     )
     text_labeled(c, "nome_personagem", "Nome", x2, top - 14, col_w)
     text_labeled(c, "jogador", "Jogador", x3, top - 14, col_w)
 
     y = top - 36
     text_labeled(c, "cronica", "Cronica", x1, y, col_w)
-    choice(c, "cla", "Cla / origem", data.CLANS, x2, y, col_w)
-    choice(c, "geracao", "Geracao", data.GENERATION_OPTIONS, x3, y, col_w, value="13+")
+    choice(c, "cla", "Cla / origem", data.CLANS, x2, y, col_w, allow_blank=True)
+    choice(c, "geracao", "Geracao", data.GENERATION_OPTIONS, x3, y, col_w, allow_blank=True)
 
     y -= 36
     text_labeled(c, "conceito", "Conceito", x1, y, col_w)
-    choice(c, "natureza", "Natureza", data.ARCHETYPES, x2, y, col_w)
-    choice(c, "comportamento", "Comportamento", data.ARCHETYPES, x3, y, col_w)
+    choice(c, "natureza", "Natureza", data.ARCHETYPES, x2, y, col_w, allow_blank=True)
+    choice(
+        c,
+        "comportamento",
+        "Comportamento",
+        data.ARCHETYPES,
+        x3,
+        y,
+        col_w,
+        allow_blank=True,
+    )
 
     y -= 36
     text_labeled(c, "senhor", "Senhor / criador", x1, y, col_w)
     text_labeled(c, "refugio", "Refugio", x2, y, col_w)
-    choice(c, "moralidade_tipo", "Moralidade", ["Humanidade", "Trilha"], x3, y, col_w)
+    choice(
+        c,
+        "moralidade_tipo",
+        "Moralidade",
+        ["Humanidade", "Trilha"],
+        x3,
+        y,
+        col_w,
+        allow_blank=True,
+    )
 
     y -= 28
     attr_y = y

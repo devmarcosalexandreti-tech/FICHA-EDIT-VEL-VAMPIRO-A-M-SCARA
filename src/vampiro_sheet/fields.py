@@ -60,8 +60,10 @@ def text_labeled(c, name, label_text, x, y, w, h=14, size=8, multiline=False, re
     )
 
 
-def choice(c, name, label_text, options, x, y, w, h=14, value=None):
+def choice(c, name, label_text, options, x, y, w, h=14, value=None, allow_blank=False):
     label(c, label_text, x, y + h + 2)
+    field_options = [" ", *options] if allow_blank else options
+    selected_value = " " if allow_blank and value is None else (value or options[0])
     c.acroForm.choice(
         name=name,
         tooltip=label_text,
@@ -69,8 +71,8 @@ def choice(c, name, label_text, options, x, y, w, h=14, value=None):
         y=y,
         width=w,
         height=h,
-        options=options,
-        value=value or options[0],
+        options=field_options,
+        value=selected_value,
         borderColor=LIGHT,
         fillColor=colors.white,
         textColor=INK,

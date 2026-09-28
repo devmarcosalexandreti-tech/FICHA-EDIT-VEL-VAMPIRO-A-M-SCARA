@@ -33,13 +33,17 @@ def _safe(name: str) -> str:
     return "".join(ch for ch in name if ch.isalnum())
 
 
+def _trait_label(name: str) -> str:
+    return "Empatia C/ Animais" if name == "Empatia com Animais" else name
+
+
 def draw_trait_block(c, title_text, traits, x, y, w, prefix, minimum=0):
     h = 19 + len(traits) * 13
     section(c, title_text, x, y, w, h)
     yy = y - 28
     for trait in traits:
         safe = _safe(trait)
-        trait_row(c, trait, f"{prefix}_{safe}", x + 7, yy, value=minimum)
+        trait_row(c, _trait_label(trait), f"{prefix}_{safe}", x + 7, yy, value=minimum)
         numeric(
             c,
             f"{prefix}_{safe}_val",

@@ -90,6 +90,12 @@ class ExistingPdfContractTests(unittest.TestCase):
                             "/Off", str(self.fields[base + "_" + str(index)].get("/V"))
                         )
 
+    def test_animal_ken_uses_the_abbreviated_visible_label(self):
+        page_text = self.reader.pages[0].extract_text()
+        self.assertIn("Empatia C/ Animais", page_text)
+        self.assertNotIn("Empatia com Animais", page_text)
+        self.assertIn("habilidade_EmpatiacomAnimais_val", self.fields)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

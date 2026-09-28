@@ -78,6 +78,18 @@ class ExistingPdfContractTests(unittest.TestCase):
         expected.update("virtude_" + safe_name(item) + "_val" for item in data.VIRTUES)
         self.assertEqual(set(), expected - set(self.fields))
 
+    def test_all_attributes_start_with_one_filled_dot(self):
+        for group, traits in data.ATTRIBUTES.items():
+            for trait in traits:
+                base = "atributo_" + safe_name(group) + "_" + safe_name(trait)
+                with self.subTest(attribute=trait):
+                    self.assertEqual("1", str(self.fields[base + "_val"].get("/V")))
+                    self.assertEqual("/Yes", str(self.fields[base + "_1"].get("/V")))
+                    for index in range(2, 6):
+                        self.assertEqual(
+                            "/Off", str(self.fields[base + "_" + str(index)].get("/V"))
+                        )
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             data.CHARACTER_TYPES,

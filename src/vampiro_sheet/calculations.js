@@ -92,6 +92,8 @@ function setDots(baseName, value, count) {
 function syncDotsFromClick(baseName, index, count) {
   var clicked = this.getField(baseName + "_" + index);
   var value = clicked && clicked.value !== "Off" ? Number(index) : Number(index) - 1;
+  var minimum = baseName.indexOf("atributo_") === 0 ? 1 : 0;
+  value = Math.max(minimum, value);
   setv(baseName + "_val", value);
   setDots(baseName, value, count);
   recalcVampiro();
@@ -113,7 +115,12 @@ function syncHealthDamage(baseName, damageType) {
 
 function syncAllTraitDots(warnings) {
   for (var index = 0; index < traitBases.length; index += 1) {
-    var value = numericField(traitBases[index] + "_val", warnings, 0, 10);
+    var minimum = traitBases[index].indexOf("atributo_") === 0 ? 1 : 0;
+    var value = numericField(traitBases[index] + "_val", warnings, minimum, 10);
+    if (value !== null && value < minimum) {
+      value = minimum;
+      setv(traitBases[index] + "_val", value);
+    }
     if (value !== null) setDots(traitBases[index], Math.min(value, 5), 5);
   }
 }

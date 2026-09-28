@@ -23,6 +23,12 @@ NUMERIC_VALIDATION_ACTION = (
     " event.rc = false;"
     f"}} else {{ {RECALCULATE_ACTION} }}"
 )
+ATTRIBUTE_NUMERIC_VALIDATION_ACTION = (
+    r"if (!/^\d+$/.test(String(event.value)) || Number(event.value) < 1) {"
+    ' app.alert("Atributos devem ter valor minimo 1.");'
+    " event.rc = false;"
+    f"}} else {{ {RECALCULATE_ACTION} }}"
+)
 
 
 def field_action(field_name: str, field_type: str) -> tuple[str, str] | None:
@@ -37,6 +43,8 @@ def field_action(field_name: str, field_type: str) -> tuple[str, str] | None:
         base_name, index = dot_match.groups()
         return "/U", f'syncDotsFromClick("{base_name}", {index}, 5);'
 
+    if field_type == "/Tx" and field_name.startswith("atributo_") and field_name.endswith("_val"):
+        return "/V", ATTRIBUTE_NUMERIC_VALIDATION_ACTION
     if field_type == "/Tx" and NUMERIC_FIELD_PATTERN.search(field_name):
         return "/V", NUMERIC_VALIDATION_ACTION
     if field_type in {"/Tx", "/Ch"}:

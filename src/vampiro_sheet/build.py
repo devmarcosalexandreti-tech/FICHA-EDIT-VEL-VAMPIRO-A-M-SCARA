@@ -33,13 +33,13 @@ def _safe(name: str) -> str:
     return "".join(ch for ch in name if ch.isalnum())
 
 
-def draw_trait_block(c, title_text, traits, x, y, w, prefix):
+def draw_trait_block(c, title_text, traits, x, y, w, prefix, minimum=0):
     h = 19 + len(traits) * 13
     section(c, title_text, x, y, w, h)
     yy = y - 28
     for trait in traits:
         safe = _safe(trait)
-        trait_row(c, trait, f"{prefix}_{safe}", x + 7, yy)
+        trait_row(c, trait, f"{prefix}_{safe}", x + 7, yy, value=minimum)
         numeric(
             c,
             f"{prefix}_{safe}_val",
@@ -47,6 +47,7 @@ def draw_trait_block(c, title_text, traits, x, y, w, prefix):
             yy - 2,
             21,
             10,
+            value=str(minimum) if minimum else "",
             tooltip=f"{trait}: valor numerico",
         )
         yy -= 13
@@ -89,7 +90,16 @@ def draw_identity(c):
     attr_y = y
     for i, (group, traits) in enumerate(data.ATTRIBUTES.items()):
         x, w = columns(3)[i]
-        draw_trait_block(c, group, traits, x, attr_y, w, f"atributo_{_safe(group)}")
+        draw_trait_block(
+            c,
+            group,
+            traits,
+            x,
+            attr_y,
+            w,
+            f"atributo_{_safe(group)}",
+            minimum=1,
+        )
 
     abil_y = attr_y - 67
     for i, (group, traits) in enumerate(data.ABILITIES.items()):

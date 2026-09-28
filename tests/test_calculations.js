@@ -146,6 +146,17 @@ test("clicking a trait dot updates the numeric source of truth", () => {
   assert.equal(sheet.values().habilidade_Briga_4, "Off");
 });
 
+test("attributes cannot be reduced below one", () => {
+  const sheet = createSheet(vampireValues({ atributo_Fisicos_Forca_val: "0" }));
+  assert.equal(sheet.values().atributo_Fisicos_Forca_val, "1");
+  assert.equal(sheet.values().atributo_Fisicos_Forca_1, "Yes");
+
+  sheet.fields.atributo_Fisicos_Forca_1.value = "Off";
+  sheet.context.syncDotsFromClick("atributo_Fisicos_Forca", 1, 5);
+  assert.equal(sheet.values().atributo_Fisicos_Forca_val, "1");
+  assert.equal(sheet.values().atributo_Fisicos_Forca_1, "Yes");
+});
+
 test("damage types are mutually exclusive within one health level", () => {
   const sheet = createSheet({
     tipo_personagem: "Mortal",

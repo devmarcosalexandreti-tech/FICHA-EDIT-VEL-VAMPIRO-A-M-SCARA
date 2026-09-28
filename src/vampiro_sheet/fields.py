@@ -97,7 +97,7 @@ def checkbox(c, name, x, y, size=8, checked=False, tooltip=None):
     )
 
 
-def dots(c, base_name, x, y, count=5, size=7, tooltip=None):
+def dots(c, base_name, x, y, count=5, size=7, tooltip=None, value=0):
     for i in range(1, count + 1):
         checkbox(
             c,
@@ -105,15 +105,16 @@ def dots(c, base_name, x, y, count=5, size=7, tooltip=None):
             x + (i - 1) * (size + 2),
             y,
             size=size,
+            checked=i <= value,
             tooltip=f"{tooltip or base_name}: ponto {i}",
         )
 
 
-def trait_row(c, label_text, base_name, x, y, w_label=63, count=5):
+def trait_row(c, label_text, base_name, x, y, w_label=63, count=5, value=0):
     c.setFillColor(INK)
     c.setFont("Helvetica", 7.2)
     c.drawString(x, y + 1.5, label_text)
-    dots(c, base_name, x + w_label, y - 1, count=count, tooltip=label_text)
+    dots(c, base_name, x + w_label, y - 1, count=count, tooltip=label_text, value=value)
 
 
 def numeric(c, name, x, y, w=26, h=12, value="", tooltip=None, readonly=False):

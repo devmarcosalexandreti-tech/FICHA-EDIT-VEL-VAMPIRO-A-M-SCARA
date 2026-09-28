@@ -96,6 +96,11 @@ class ExistingPdfContractTests(unittest.TestCase):
         self.assertNotIn("Empatia com Animais", page_text)
         self.assertIn("habilidade_EmpatiacomAnimais_val", self.fields)
 
+    def test_derived_fields_are_separated_from_the_advantage_lists(self):
+        last_discipline_bottom = float(self.widgets["disciplina_Vicissitude_val"]["/Rect"][1])
+        derived_field_top = float(self.widgets["humanidade_sugerida"]["/Rect"][3])
+        self.assertGreaterEqual(last_discipline_bottom - derived_field_top, 10)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

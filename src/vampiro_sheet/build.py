@@ -130,7 +130,7 @@ def draw_identity(c):
 
     adv_y = 100 * mm
     x, w = MARGIN, PAGE_W - 2 * MARGIN
-    section(c, "Vantagens e Derivados", x, adv_y, w, 83 * mm)
+    section(c, "Vantagens e Derivados", x, adv_y, w, 86.5 * mm)
     third = (w - 20) / 3
     draw_trait_list(c, "Disciplinas", data.DISCIPLINES, x + 7, adv_y - 24, third, "disciplina")
     draw_trait_list(
@@ -138,7 +138,7 @@ def draw_identity(c):
     )
     draw_trait_list(c, "Virtudes", data.VIRTUES, x + 13 + 2 * third, adv_y - 24, third, "virtude")
 
-    bottom_y = 19 * mm
+    bottom_y = 15.5 * mm
     for i, (fname, lab) in enumerate(
         [
             ("humanidade_sugerida", "Humanidade/Trilha sugerida"),

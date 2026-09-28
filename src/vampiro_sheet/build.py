@@ -493,21 +493,33 @@ def draw_progress(c):
         )
 
     xcost = MARGIN + 7
-    ycost = 28 * mm
+    costs_title_y = 33.5 * mm
+    costs_start_y = 29 * mm
+    costs_line_step = 5.4
     c.setFillColor(RED)
     c.setFont("Helvetica-Bold", 7)
-    c.drawString(xcost, ycost + 22, "Custos de bonus")
+    c.drawString(xcost, costs_title_y, "Custos de bonus")
     for i, (k, v) in enumerate(data.BONUS_COSTS):
         c.setFillColor(INK)
-        c.setFont("Helvetica", 5.7)
-        c.drawString(xcost + (i % 4) * 44 * mm, ycost + 12 - (i // 4) * 8, f"{k}: {v}")
+        c.setFont("Helvetica", 5.2)
+        c.drawString(
+            xcost + (i % 2) * 36 * mm,
+            costs_start_y - (i // 2) * costs_line_step,
+            f"{k}: {v}",
+        )
+
+    experience_x = xcost + 76 * mm
     c.setFillColor(RED)
     c.setFont("Helvetica-Bold", 7)
-    c.drawString(xcost, ycost - 6, "Custos de experiencia")
+    c.drawString(experience_x, costs_title_y, "Custos de experiencia")
     for i, (k, v) in enumerate(data.XP_COSTS):
         c.setFillColor(INK)
-        c.setFont("Helvetica", 5.5)
-        c.drawString(xcost + (i % 3) * 62 * mm, ycost - 16 - (i // 3) * 7, f"{k}: {v}")
+        c.setFont("Helvetica", 5.2)
+        c.drawString(
+            experience_x + (i % 2) * 53 * mm,
+            costs_start_y - (i // 2) * costs_line_step,
+            f"{k}: {v}",
+        )
 
 
 def build(output: Path | None = None, work_dir: Path | None = None):

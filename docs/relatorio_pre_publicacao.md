@@ -51,7 +51,7 @@ Após a instalação, as verificações são executadas com Ruff, unittest, Cove
 - Ruff lint: aprovado.
 - Ruff format check: aprovado em 12 arquivos.
 - Compilação Python com avisos tratados como erro: aprovada.
-- Testes Python: 33 aprovados.
+- Testes Python: 34 aprovados.
 - Cobertura Python combinada: 99%, com medição de ramificações.
 - Testes JavaScript: 20 aprovados.
 - Geração e validação do PDF: aprovadas.

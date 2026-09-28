@@ -5,6 +5,7 @@ from pathlib import Path
 from pypdf import PdfReader
 from pypdf.generic import ContentStream
 from reportlab.lib.units import mm
+from reportlab.pdfbase.pdfmetrics import stringWidth
 
 from src.vampiro_sheet import data
 
@@ -210,6 +211,37 @@ class ExistingPdfContractTests(unittest.TestCase):
             with self.subTest(field=name):
                 field_top = float(self.widgets[name]["/Rect"][3])
                 self.assertGreaterEqual(header_bottom - field_top, 8)
+
+    def test_all_cost_reference_text_stays_inside_the_bonus_section(self):
+        page = self.reader.pages[4]
+        expected = {
+            *(f"{name}: {cost}" for name, cost in data.BONUS_COSTS),
+            *(f"{name}: {cost}" for name, cost in data.XP_COSTS),
+        }
+        section_left = 12 * mm
+        section_right = float(page.mediabox.width) - 12 * mm
+        section_bottom = 18 * mm
+
+        current_matrix = None
+        current_font_size = None
+        positions = {}
+        stream = ContentStream(page.get_contents(), self.reader)
+        for operands, operator in stream.operations:
+            if operator == b"Tm":
+                current_matrix = tuple(float(value) for value in operands)
+            elif operator == b"Tf":
+                current_font_size = float(operands[1])
+            elif operator == b"Tj" and str(operands[0]) in expected:
+                positions[str(operands[0])] = (current_matrix, current_font_size)
+
+        self.assertEqual(expected, set(positions))
+        for item, (matrix, font_size) in positions.items():
+            with self.subTest(item=item):
+                x, y = matrix[4], matrix[5]
+                width = stringWidth(item, "Helvetica", font_size)
+                self.assertGreaterEqual(x, section_left)
+                self.assertLessEqual(x + width, section_right)
+                self.assertGreaterEqual(y, section_bottom + 1)
 
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(

@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.venv*/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+build/
+*.tmp.pdf
+*.log
+
+# Configuracao local e segredos.
+.env
+.env.*
+!.env.example
+
+# Editores, agentes locais e sistema operacional.
+.idea/
+.vscode/
+.agents/
+.codex/
+.DS_Store
+Thumbs.db
+
+# Material de consulta local: nao publicar sem autorizacao.
+_extracted_text.txt
+vampiro-a-mascara-modulo-basico-3a-edicao-biblioteca-elfica.pdf

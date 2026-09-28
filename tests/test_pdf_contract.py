@@ -243,6 +243,20 @@ class ExistingPdfContractTests(unittest.TestCase):
                 self.assertLessEqual(x + width, section_right)
                 self.assertGreaterEqual(y, section_bottom + 1)
 
+    def test_discipline_notes_start_below_the_last_discipline_row(self):
+        page = self.reader.pages[2]
+        section_top = float(page.mediabox.height) - 25 * mm
+        section_bottom = section_top - 92 * mm
+
+        last_discipline_bottom = float(
+            self.widgets["disciplina_detalhe_Vicissitude_nivel"]["/Rect"][1]
+        )
+        notes_bottom = float(self.widgets["poderes_disciplinas"]["/Rect"][1])
+        notes_top = float(self.widgets["poderes_disciplinas"]["/Rect"][3])
+
+        self.assertGreaterEqual(last_discipline_bottom - notes_top, 15)
+        self.assertGreaterEqual(notes_bottom, section_bottom)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

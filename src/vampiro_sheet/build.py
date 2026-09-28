@@ -288,9 +288,9 @@ def draw_disciplines(c):
         "poderes_disciplinas",
         "Poderes, custos, testes e observacoes",
         MARGIN + 7,
-        top - 129,
+        top - 235,
         PAGE_W - 2 * MARGIN - 14,
-        h=72,
+        h=120,
         multiline=True,
     )
 

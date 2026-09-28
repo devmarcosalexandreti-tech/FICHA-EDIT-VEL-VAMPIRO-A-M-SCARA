@@ -179,6 +179,22 @@ class ExistingPdfContractTests(unittest.TestCase):
             self.assertGreater(matrix[5], section_top - 15)
             self.assertLess(matrix[5], section_top)
 
+    def test_combat_columns_use_the_available_width_with_clear_gaps(self):
+        first_row = [self.widgets[f"arma_1_{index}"] for index in range(1, 8)]
+        for current, following in zip(first_row, first_row[1:]):
+            current_right = float(current["/Rect"][2])
+            following_left = float(following["/Rect"][0])
+            self.assertGreaterEqual(following_left - current_right, 4)
+
+        alcance_right = float(self.widgets["arma_1_4"]["/Rect"][2])
+        cadence_left = float(self.widgets["arma_1_5"]["/Rect"][0])
+        self.assertGreaterEqual(cadence_left - alcance_right, 4)
+
+        page_right = float(self.reader.pages[1].mediabox.width) - 12 * mm
+        notes_right = float(self.widgets["arma_1_7"]["/Rect"][2])
+        self.assertLessEqual(notes_right, page_right)
+        self.assertLessEqual(page_right - notes_right, 3)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

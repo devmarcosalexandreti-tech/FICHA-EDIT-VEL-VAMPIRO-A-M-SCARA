@@ -233,7 +233,7 @@ def draw_resources(c):
 
     section(c, "Combate", x1, top - 76 * mm, PAGE_W - 2 * MARGIN, 72 * mm)
     headers = ["Arma", "Dif.", "Dano", "Alcance", "Cad.", "Pente", "Notas"]
-    widths = [45, 16, 22, 22, 18, 18, 56]
+    widths = [92, 38, 48, 62, 44, 48, 190]
     table_x = x1 + 7
     yy = top - 101 * mm
     xx = table_x
@@ -243,7 +243,7 @@ def draw_resources(c):
     for r in range(5):
         xx = table_x
         for i, ww in enumerate(widths):
-            text(c, f"arma_{r + 1}_{i + 1}", xx, yy, ww - 2, 12, size=6)
+            text(c, f"arma_{r + 1}_{i + 1}", xx, yy, ww - 4, 12, size=6)
             xx += ww
         yy -= 15
 

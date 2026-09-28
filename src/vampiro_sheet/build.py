@@ -189,27 +189,27 @@ def draw_resources(c):
         ("forca_vontade_perm", "Força de Vontade Permanente"),
         ("forca_vontade_temp", "Força de Vontade Temporária"),
     ]
-    yy = top - 35
+    yy = top - 38
     for name, lab in fields:
-        text_labeled(c, name, lab, x1 + 7, yy, 38 * mm, h=12)
-        yy -= 18
+        text_labeled(c, name, lab, x1 + 7, yy, 38 * mm, h=12, label_gap=5)
+        yy -= 21
     small_note(
         c,
         "Pontos iniciais de sangue: jogue 1d10. Carnicais e antagonistas podem usar campos manuais.",
-        x1 + 58 * mm,
+        x1 + 55 * mm,
         top - 29,
-        w1 - 62 * mm,
+        w1 - 59 * mm,
     )
     for i in range(20):
         checkbox(
             c,
             f"sangue_box_{i + 1}",
-            x1 + 58 * mm + (i % 10) * 11,
-            top - 52 - (i // 10) * 13,
+            x1 + 55 * mm + (i % 10) * 10,
+            top - 62 - (i // 10) * 14,
             size=8,
         )
     for i in range(10):
-        checkbox(c, f"fv_box_{i + 1}", x1 + 58 * mm + i * 11, top - 83, size=8)
+        checkbox(c, f"fv_box_{i + 1}", x1 + 55 * mm + i * 10, top - 98, size=8)
 
     section(c, "Vitalidade", x2, top, w1, 70 * mm)
     yy = top - 28

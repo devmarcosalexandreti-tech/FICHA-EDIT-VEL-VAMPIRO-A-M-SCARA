@@ -114,6 +114,34 @@ class ExistingPdfContractTests(unittest.TestCase):
         current_blood_top = float(self.widgets["sangue_atual"]["/Rect"][3])
         self.assertGreaterEqual(header_bottom - current_blood_top, 7)
 
+    def test_blood_and_willpower_controls_fit_and_have_readable_spacing(self):
+        page = self.reader.pages[1]
+        section_width = (float(page.mediabox.width) - 2 * 12 * mm - 4 * mm) / 2
+        section_right = 12 * mm + section_width
+
+        for name in [
+            *(f"sangue_box_{index}" for index in range(1, 21)),
+            *(f"fv_box_{index}" for index in range(1, 11)),
+        ]:
+            with self.subTest(field=name):
+                self.assertLessEqual(float(self.widgets[name]["/Rect"][2]), section_right)
+
+        row_names = [
+            "sangue_atual",
+            "sangue_max",
+            "sangue_turno",
+            "forca_vontade_perm",
+            "forca_vontade_temp",
+        ]
+        for current, following in zip(row_names, row_names[1:]):
+            current_bottom = float(self.widgets[current]["/Rect"][1])
+            following_top = float(self.widgets[following]["/Rect"][3])
+            self.assertGreaterEqual(current_bottom - following_top, 9)
+
+        section_top = float(page.mediabox.height) - 25 * mm
+        first_checkbox_top = float(self.widgets["sangue_box_1"]["/Rect"][3])
+        self.assertGreaterEqual(section_top - first_checkbox_top, 54)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

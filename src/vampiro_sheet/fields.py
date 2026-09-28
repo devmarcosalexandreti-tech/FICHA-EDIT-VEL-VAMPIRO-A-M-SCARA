@@ -44,8 +44,20 @@ def text(
     )
 
 
-def text_labeled(c, name, label_text, x, y, w, h=14, size=8, multiline=False, readonly=False):
-    label(c, label_text, x, y + h + 2)
+def text_labeled(
+    c,
+    name,
+    label_text,
+    x,
+    y,
+    w,
+    h=14,
+    size=8,
+    multiline=False,
+    readonly=False,
+    label_gap=2,
+):
+    label(c, label_text, x, y + h + label_gap)
     text(
         c,
         name,

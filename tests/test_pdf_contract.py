@@ -195,6 +195,22 @@ class ExistingPdfContractTests(unittest.TestCase):
         self.assertLessEqual(notes_right, page_right)
         self.assertLessEqual(page_right - notes_right, 3)
 
+    def test_creation_audit_fields_start_below_the_section_header(self):
+        page = self.reader.pages[4]
+        section_top = float(page.mediabox.height) - 25 * mm
+        header_bottom = section_top - 15
+        first_row = [
+            "attr_fisicos_total",
+            "attr_sociais_total",
+            "attr_mentais_total",
+            "hab_talentos_total",
+            "hab_pericias_total",
+        ]
+        for name in first_row:
+            with self.subTest(field=name):
+                field_top = float(self.widgets[name]["/Rect"][3])
+                self.assertGreaterEqual(header_bottom - field_top, 8)
+
     def test_dropdowns_expose_the_complete_supported_options(self):
         self.assertEqual(
             [" ", *data.CHARACTER_TYPES],

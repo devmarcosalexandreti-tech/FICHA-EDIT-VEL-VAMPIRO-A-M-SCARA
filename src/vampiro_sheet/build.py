@@ -413,7 +413,7 @@ def draw_progress(c):
     ]
     for i, (name, lab) in enumerate(fields):
         x = MARGIN + 7 + (i % 5) * 36 * mm
-        y = top - 26 - (i // 5) * 20
+        y = top - 34 - (i // 5) * 20
         text_labeled(c, name, lab, x, y, 26 * mm, h=11)
     text_labeled(
         c,
